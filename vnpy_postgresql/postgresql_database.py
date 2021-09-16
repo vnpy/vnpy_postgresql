@@ -200,6 +200,8 @@ class PostgresqlDatabase(BaseDatabase):
 
         overview.save()
 
+        return True
+
     def save_tick_data(self, ticks: List[TickData]) -> bool:
         """保存TICK数据"""
         # 将TickData数据转换为字典，并调整时区
@@ -225,6 +227,8 @@ class PostgresqlDatabase(BaseDatabase):
                         DbTickData.datetime,
                     ),
                 ).execute()
+
+        return True
 
     def load_bar_data(
         self,
