@@ -16,26 +16,23 @@
 
 ## 使用
 
-PostgreSQL在VN Trader中配置时，需要填写以下字段信息：
+### 全局配置
 
-| 字段名            | 值 |
-|---------           |---- |
-|database.driver     | "postgresql" |
-|database.host       | 地址 |
-|database.port       | 端口 |
-|database.database   | 数据库名 |
-|database.user       | 用户名 |
-|database.password   | 密码 |
- 
-PostgreSQL的例子如下所示：
+在vn.py中使用PostgreSQL时，需要在全局配置中填写以下字段信息：
 
-| 字段名            | 值 |
-|---------           |----  |
-|database.driver     | postgresql |
-|database.host       | localhost |
-|database.port       | 5432 |
-|database.database   | vnpy |
-|database.user       | postgre |
-|database.password   | .... |
+|名称|含义|必填|举例|
+|---------|----|---|---|
+|database.name|名称|是|postgresql|
+|database.host|地址|是|localhost|
+|database.port|端口|是|5432|
+|database.database|实例|是|vnpy|
+|database.user|用户名|是|postgres|
+|database.password|密码|是|123456|
 
 请注意，vn.py不会主动为关系型数据库创建数据库，所以请确保你所填的database.database字段对应的数据库已经创建好了。若未创建数据库，请手动连上数据库并创建。
+
+### 创建实例
+
+vn.py不会主动为PostgreSQL数据库创建实例，所以使用前请确保database.database字段中填写的的数据库实例已经创建了。
+
+若实例尚未创建，可以使用【pgAdmin 4】客户端的【Create Database】进行操作。
