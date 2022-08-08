@@ -154,7 +154,7 @@ class PostgresqlDatabase(BaseDatabase):
         self.db.connect()
         self.db.create_tables([DbBarData, DbTickData, DbBarOverview, DbTickOverview])
 
-    def save_bar_data(self, bars: List[BarData]) -> bool:
+    def save_bar_data(self, bars: List[BarData], stream: bool = False) -> bool:
         """保存K线数据"""
         # 读取主键参数
         bar = bars[0]
@@ -203,6 +203,9 @@ class PostgresqlDatabase(BaseDatabase):
             overview.start = bars[0].datetime
             overview.end = bars[-1].datetime
             overview.count = len(bars)
+        elif stream:
+            overview.end = bars[-1].datetime
+            overview.count += len(bars)
         else:
             overview.start = min(bars[0].datetime, overview.start)
             overview.end = max(bars[-1].datetime, overview.end)
@@ -218,7 +221,7 @@ class PostgresqlDatabase(BaseDatabase):
 
         return True
 
-    def save_tick_data(self, ticks: List[TickData]) -> bool:
+    def save_tick_data(self, ticks: List[TickData], stream: bool = False) -> bool:
         """保存TICK数据"""
         # 读取主键参数
         tick: TickData = ticks[0]
@@ -262,6 +265,9 @@ class PostgresqlDatabase(BaseDatabase):
             overview.start = ticks[0].datetime
             overview.end = ticks[-1].datetime
             overview.count = len(ticks)
+        elif stream:
+            overview.end = ticks[-1].datetime
+            overview.count += len(ticks)
         else:
             overview.start = min(ticks[0].datetime, overview.start)
             overview.end = max(ticks[-1].datetime, overview.end)
