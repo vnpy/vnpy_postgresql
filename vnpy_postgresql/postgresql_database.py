@@ -3,15 +3,16 @@ from typing import List
 
 from peewee import (
     AutoField,
-    chunked,
     CharField,
     DateTimeField,
-    FloatField, IntegerField,
+    FloatField,
+    IntegerField,
     Model,
     PostgresqlDatabase as PeeweePostgresqlDatabase,
     ModelSelect,
     ModelDelete,
-    fn
+    fn,
+    chunked,
 )
 
 from vnpy.trader.constant import Exchange, Interval
@@ -180,14 +181,15 @@ class PostgresqlDatabase(BaseDatabase):
         with self.db.atomic():
             for c in chunked(data, 100):
                 DbBarData.insert_many(c).on_conflict(
-                    update={DbBarData.volume: DbBarData.volume,
-                            DbBarData.turnover: DbBarData.turnover,
-                            DbBarData.open_interest: DbBarData.open_interest,
-                            DbBarData.open_price: DbBarData.open_price,
-                            DbBarData.high_price: DbBarData.high_price,
-                            DbBarData.low_price: DbBarData.low_price,
-                            DbBarData.close_price: DbBarData.close_price
-                            },
+                    update={
+                        DbBarData.volume: DbBarData.volume,
+                        DbBarData.turnover: DbBarData.turnover,
+                        DbBarData.open_interest: DbBarData.open_interest,
+                        DbBarData.open_price: DbBarData.open_price,
+                        DbBarData.high_price: DbBarData.high_price,
+                        DbBarData.low_price: DbBarData.low_price,
+                        DbBarData.close_price: DbBarData.close_price
+                    },
                     conflict_target=(
                         DbBarData.symbol,
                         DbBarData.exchange,
@@ -253,6 +255,52 @@ class PostgresqlDatabase(BaseDatabase):
             for d in data:
                 DbTickData.insert(d).on_conflict(
                     update=d,
+                    conflict_target=(
+                        DbTickData.symbol,
+                        DbTickData.exchange,
+                        DbTickData.datetime,
+
+
+                    ),
+                ).execute()
+
+            for c in chunked(data, 100):
+                DbTickData.insert_many(c).on_conflict(
+                    update={
+                        DbTickData.name: DbTickData.name,
+                        DbTickData.volume: DbTickData.volume,
+                        DbTickData.turnover: DbTickData.turnover,
+                        DbTickData.open_interest: DbTickData.open_interest,
+                        DbTickData.last_price: DbTickData.last_price,
+                        DbTickData.last_volume: DbTickData.last_volume,
+                        DbTickData.limit_up: DbTickData.limit_up,
+                        DbTickData.limit_down: DbTickData.limit_down,
+                        DbTickData.open_price: DbTickData.open_price,
+                        DbTickData.high_price: DbTickData.high_price,
+                        DbTickData.low_price: DbTickData.low_price,
+                        DbTickData.pre_close: DbTickData.pre_close,
+                        DbTickData.bid_price_1: DbTickData.bid_price_1,
+                        DbTickData.bid_price_2: DbTickData.bid_price_2,
+                        DbTickData.bid_price_3: DbTickData.bid_price_3,
+                        DbTickData.bid_price_4: DbTickData.bid_price_4,
+                        DbTickData.bid_price_5: DbTickData.bid_price_5,
+                        DbTickData.ask_price_1: DbTickData.ask_price_1,
+                        DbTickData.ask_price_2: DbTickData.ask_price_2,
+                        DbTickData.ask_price_3: DbTickData.ask_price_3,
+                        DbTickData.ask_price_4: DbTickData.ask_price_4,
+                        DbTickData.ask_price_5: DbTickData.ask_price_5,
+                        DbTickData.bid_volume_1: DbTickData.bid_volume_1,
+                        DbTickData.bid_volume_2: DbTickData.bid_volume_2,
+                        DbTickData.bid_volume_3: DbTickData.bid_volume_3,
+                        DbTickData.bid_volume_4: DbTickData.bid_volume_4,
+                        DbTickData.bid_volume_5: DbTickData.bid_volume_5,
+                        DbTickData.ask_volume_1: DbTickData.ask_volume_1,
+                        DbTickData.ask_volume_2: DbTickData.ask_volume_2,
+                        DbTickData.ask_volume_3: DbTickData.ask_volume_3,
+                        DbTickData.ask_volume_4: DbTickData.ask_volume_4,
+                        DbTickData.ask_volume_5: DbTickData.ask_volume_5,
+                        DbTickData.localtime: DbTickData.localtime,
+                    },
                     conflict_target=(
                         DbTickData.symbol,
                         DbTickData.exchange,
