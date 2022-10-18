@@ -3,6 +3,7 @@ from typing import List
 
 from peewee import (
     AutoField,
+    chunked,
     CharField,
     DateTimeField,
     FloatField, IntegerField,
@@ -175,11 +176,18 @@ class PostgresqlDatabase(BaseDatabase):
             d.pop("vt_symbol")
             data.append(d)
 
-        # 使用upsert操作将数据更新到数据库中
+        # 使用upsert操作将数据更新到数据库中 chunked批量操作加快速度
         with self.db.atomic():
-            for d in data:
-                DbBarData.insert(d).on_conflict(
-                    update=d,
+            for c in chunked(data, 100):
+                DbBarData.insert_many(c).on_conflict(
+                    update={DbBarData.volume: DbBarData.volume,
+                            DbBarData.turnover: DbBarData.turnover,
+                            DbBarData.open_interest: DbBarData.open_interest,
+                            DbBarData.open_price: DbBarData.open_price,
+                            DbBarData.high_price: DbBarData.high_price,
+                            DbBarData.low_price: DbBarData.low_price,
+                            DbBarData.close_price: DbBarData.close_price
+                            },
                     conflict_target=(
                         DbBarData.symbol,
                         DbBarData.exchange,
