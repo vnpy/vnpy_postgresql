@@ -153,7 +153,7 @@ class PostgresqlDatabase(BaseDatabase):
     def __init__(self) -> None:
         """"""
         self.db: PeeweePostgresqlDatabase = db
-        self.db.connect()
+        self.db.connect(reuse_if_open=True)
         self.db.create_tables([DbBarData, DbTickData, DbBarOverview, DbTickOverview])
 
     def save_bar_data(self, bars: List[BarData], stream: bool = False) -> bool:
