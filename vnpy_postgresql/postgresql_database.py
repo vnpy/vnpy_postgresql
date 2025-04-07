@@ -12,6 +12,8 @@ from peewee import (
     ModelDelete,
     fn,
     chunked,
+    Asc,
+    Desc
 )
 
 from vnpy.trader.constant import Exchange, Interval
@@ -106,7 +108,7 @@ class DbTickData(Model):
     ask_volume_4: float = FloatField(null=True)
     ask_volume_5: float = FloatField(null=True)
 
-    localtime: datetime = DateTimeField(null=True)
+    localtime: DateTimeField = DateTimeField(null=True)
 
     class Meta:
         database: PeeweePostgresqlDatabase = db
@@ -314,7 +316,7 @@ class PostgresqlDatabase(BaseDatabase):
         )
 
         if not overview:
-            overview: DbTickOverview = DbTickOverview()
+            overview = DbTickOverview()
             overview.symbol = symbol
             overview.exchange = exchange.value
             overview.start = ticks[0].datetime
@@ -536,7 +538,7 @@ class PostgresqlDatabase(BaseDatabase):
                     & (DbBarData.exchange == data.exchange)
                     & (DbBarData.interval == data.interval)
                 )
-                .order_by(DbBarData.datetime.asc())
+                .order_by(Asc(DbBarData.datetime))
                 .first()
             )
             overview.start = start_bar.datetime
@@ -548,7 +550,7 @@ class PostgresqlDatabase(BaseDatabase):
                     & (DbBarData.exchange == data.exchange)
                     & (DbBarData.interval == data.interval)
                 )
-                .order_by(DbBarData.datetime.desc())
+                .order_by(Desc(DbBarData.datetime))
                 .first()
             )
             overview.end = end_bar.datetime
