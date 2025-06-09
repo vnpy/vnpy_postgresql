@@ -43,18 +43,18 @@ class DbBarData(Model):
 
     id: AutoField = AutoField()
 
-    symbol: str = CharField()
-    exchange: str = CharField()
-    datetime: datetime = DateTimeField()
-    interval: str = CharField()
+    symbol: CharField = CharField()
+    exchange: CharField = CharField()
+    datetime: DateTimeField = DateTimeField()
+    interval: CharField = CharField()
 
-    volume: float = FloatField()
-    turnover: float = FloatField()
-    open_interest: float = FloatField()
-    open_price: float = FloatField()
-    high_price: float = FloatField()
-    low_price: float = FloatField()
-    close_price: float = FloatField()
+    volume: FloatField = FloatField()
+    turnover: FloatField = FloatField()
+    open_interest: FloatField = FloatField()
+    open_price: FloatField = FloatField()
+    high_price: FloatField = FloatField()
+    low_price: FloatField = FloatField()
+    close_price: FloatField = FloatField()
 
     class Meta:
         database: PeeweePostgresqlDatabase = db
@@ -66,47 +66,47 @@ class DbTickData(Model):
 
     id: AutoField = AutoField()
 
-    symbol: str = CharField()
-    exchange: str = CharField()
-    datetime: datetime = DateTimeField()
+    symbol: CharField = CharField()
+    exchange: CharField = CharField()
+    datetime: DateTimeField = DateTimeField()
 
-    name: str = CharField()
-    volume: float = FloatField()
-    turnover: float = FloatField()
-    open_interest: float = FloatField()
-    last_price: float = FloatField()
-    last_volume: float = FloatField()
-    limit_up: float = FloatField()
-    limit_down: float = FloatField()
+    name: CharField = CharField()
+    volume: FloatField = FloatField()
+    turnover: FloatField = FloatField()
+    open_interest: FloatField = FloatField()
+    last_price: FloatField = FloatField()
+    last_volume: FloatField = FloatField()
+    limit_up: FloatField = FloatField()
+    limit_down: FloatField = FloatField()
 
-    open_price: float = FloatField()
-    high_price: float = FloatField()
-    low_price: float = FloatField()
-    pre_close: float = FloatField()
+    open_price: FloatField = FloatField()
+    high_price: FloatField = FloatField()
+    low_price: FloatField = FloatField()
+    pre_close: FloatField = FloatField()
 
-    bid_price_1: float = FloatField()
-    bid_price_2: float = FloatField(null=True)
-    bid_price_3: float = FloatField(null=True)
-    bid_price_4: float = FloatField(null=True)
-    bid_price_5: float = FloatField(null=True)
+    bid_price_1: FloatField = FloatField()
+    bid_price_2: FloatField = FloatField(null=True)
+    bid_price_3: FloatField = FloatField(null=True)
+    bid_price_4: FloatField = FloatField(null=True)
+    bid_price_5: FloatField = FloatField(null=True)
 
-    ask_price_1: float = FloatField()
-    ask_price_2: float = FloatField(null=True)
-    ask_price_3: float = FloatField(null=True)
-    ask_price_4: float = FloatField(null=True)
-    ask_price_5: float = FloatField(null=True)
+    ask_price_1: FloatField = FloatField()
+    ask_price_2: FloatField = FloatField(null=True)
+    ask_price_3: FloatField = FloatField(null=True)
+    ask_price_4: FloatField = FloatField(null=True)
+    ask_price_5: FloatField = FloatField(null=True)
 
-    bid_volume_1: float = FloatField()
-    bid_volume_2: float = FloatField(null=True)
-    bid_volume_3: float = FloatField(null=True)
-    bid_volume_4: float = FloatField(null=True)
-    bid_volume_5: float = FloatField(null=True)
+    bid_volume_1: FloatField = FloatField()
+    bid_volume_2: FloatField = FloatField(null=True)
+    bid_volume_3: FloatField = FloatField(null=True)
+    bid_volume_4: FloatField = FloatField(null=True)
+    bid_volume_5: FloatField = FloatField(null=True)
 
-    ask_volume_1: float = FloatField()
-    ask_volume_2: float = FloatField(null=True)
-    ask_volume_3: float = FloatField(null=True)
-    ask_volume_4: float = FloatField(null=True)
-    ask_volume_5: float = FloatField(null=True)
+    ask_volume_1: FloatField = FloatField()
+    ask_volume_2: FloatField = FloatField(null=True)
+    ask_volume_3: FloatField = FloatField(null=True)
+    ask_volume_4: FloatField = FloatField(null=True)
+    ask_volume_5: FloatField = FloatField(null=True)
 
     localtime: DateTimeField = DateTimeField(null=True)
 
@@ -120,12 +120,12 @@ class DbBarOverview(Model):
 
     id: AutoField = AutoField()
 
-    symbol: str = CharField()
-    exchange: str = CharField()
-    interval: str = CharField()
-    count: int = IntegerField()
-    start: datetime = DateTimeField()
-    end: datetime = DateTimeField()
+    symbol: CharField = CharField()
+    exchange: CharField = CharField()
+    interval: CharField = CharField()
+    count: IntegerField = IntegerField()
+    start: DateTimeField = DateTimeField()
+    end: DateTimeField = DateTimeField()
 
     class Meta:
         database: PeeweePostgresqlDatabase = db
@@ -137,11 +137,11 @@ class DbTickOverview(Model):
 
     id: AutoField = AutoField()
 
-    symbol: str = CharField()
-    exchange: str = CharField()
-    count: int = IntegerField()
-    start: datetime = DateTimeField()
-    end: datetime = DateTimeField()
+    symbol: CharField = CharField()
+    exchange: CharField = CharField()
+    count: IntegerField = IntegerField()
+    start: DateTimeField = DateTimeField()
+    end: DateTimeField = DateTimeField()
 
     class Meta:
         database: PeeweePostgresqlDatabase = db
