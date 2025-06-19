@@ -176,7 +176,7 @@ class PostgresqlDatabase(BaseDatabase):
             d["interval"] = d["interval"].value
             d.pop("gateway_name")
             d.pop("vt_symbol")
-            d.pop("extra")
+            d.pop("extra", None)
             data.append(d)
 
         # 使用upsert操作将数据更新到数据库中 chunked批量操作加快速度
@@ -250,7 +250,7 @@ class PostgresqlDatabase(BaseDatabase):
             d["exchange"] = d["exchange"].value
             d.pop("gateway_name")
             d.pop("vt_symbol")
-            d.pop("extra")
+            d.pop("extra", None)
             data.append(d)
 
         # 使用upsert操作将数据更新到数据库中
