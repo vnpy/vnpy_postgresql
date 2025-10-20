@@ -256,18 +256,6 @@ class PostgresqlDatabase(BaseDatabase):
 
         # 使用upsert操作将数据更新到数据库中
         with self.db.atomic():
-            for d in data:
-                DbTickData.insert(d).on_conflict(
-                    update=d,
-                    conflict_target=(
-                        DbTickData.symbol,
-                        DbTickData.exchange,
-                        DbTickData.datetime,
-
-
-                    ),
-                ).execute()
-
             for c in chunked(data, 100):
                 DbTickData.insert_many(c).on_conflict(
                     update={
