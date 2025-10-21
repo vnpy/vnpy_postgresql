@@ -13,7 +13,8 @@ from peewee import (
     fn,
     chunked,
     Asc,
-    Desc
+    Desc,
+    EXCLUDED
 )
 
 from vnpy.trader.constant import Exchange, Interval
@@ -184,13 +185,13 @@ class PostgresqlDatabase(BaseDatabase):
             for c in chunked(data, 100):
                 DbBarData.insert_many(c).on_conflict(
                     update={
-                        DbBarData.volume: DbBarData.volume,
-                        DbBarData.turnover: DbBarData.turnover,
-                        DbBarData.open_interest: DbBarData.open_interest,
-                        DbBarData.open_price: DbBarData.open_price,
-                        DbBarData.high_price: DbBarData.high_price,
-                        DbBarData.low_price: DbBarData.low_price,
-                        DbBarData.close_price: DbBarData.close_price
+                        DbBarData.volume: EXCLUDED.volume,
+                        DbBarData.turnover: EXCLUDED.turnover,
+                        DbBarData.open_interest: EXCLUDED.open_interest,
+                        DbBarData.open_price: EXCLUDED.open_price,
+                        DbBarData.high_price: EXCLUDED.high_price,
+                        DbBarData.low_price: EXCLUDED.low_price,
+                        DbBarData.close_price: EXCLUDED.close_price
                     },
                     conflict_target=(
                         DbBarData.symbol,
@@ -255,54 +256,42 @@ class PostgresqlDatabase(BaseDatabase):
 
         # 使用upsert操作将数据更新到数据库中
         with self.db.atomic():
-            for d in data:
-                DbTickData.insert(d).on_conflict(
-                    update=d,
-                    conflict_target=(
-                        DbTickData.symbol,
-                        DbTickData.exchange,
-                        DbTickData.datetime,
-
-
-                    ),
-                ).execute()
-
             for c in chunked(data, 100):
                 DbTickData.insert_many(c).on_conflict(
                     update={
-                        DbTickData.name: DbTickData.name,
-                        DbTickData.volume: DbTickData.volume,
-                        DbTickData.turnover: DbTickData.turnover,
-                        DbTickData.open_interest: DbTickData.open_interest,
-                        DbTickData.last_price: DbTickData.last_price,
-                        DbTickData.last_volume: DbTickData.last_volume,
-                        DbTickData.limit_up: DbTickData.limit_up,
-                        DbTickData.limit_down: DbTickData.limit_down,
-                        DbTickData.open_price: DbTickData.open_price,
-                        DbTickData.high_price: DbTickData.high_price,
-                        DbTickData.low_price: DbTickData.low_price,
-                        DbTickData.pre_close: DbTickData.pre_close,
-                        DbTickData.bid_price_1: DbTickData.bid_price_1,
-                        DbTickData.bid_price_2: DbTickData.bid_price_2,
-                        DbTickData.bid_price_3: DbTickData.bid_price_3,
-                        DbTickData.bid_price_4: DbTickData.bid_price_4,
-                        DbTickData.bid_price_5: DbTickData.bid_price_5,
-                        DbTickData.ask_price_1: DbTickData.ask_price_1,
-                        DbTickData.ask_price_2: DbTickData.ask_price_2,
-                        DbTickData.ask_price_3: DbTickData.ask_price_3,
-                        DbTickData.ask_price_4: DbTickData.ask_price_4,
-                        DbTickData.ask_price_5: DbTickData.ask_price_5,
-                        DbTickData.bid_volume_1: DbTickData.bid_volume_1,
-                        DbTickData.bid_volume_2: DbTickData.bid_volume_2,
-                        DbTickData.bid_volume_3: DbTickData.bid_volume_3,
-                        DbTickData.bid_volume_4: DbTickData.bid_volume_4,
-                        DbTickData.bid_volume_5: DbTickData.bid_volume_5,
-                        DbTickData.ask_volume_1: DbTickData.ask_volume_1,
-                        DbTickData.ask_volume_2: DbTickData.ask_volume_2,
-                        DbTickData.ask_volume_3: DbTickData.ask_volume_3,
-                        DbTickData.ask_volume_4: DbTickData.ask_volume_4,
-                        DbTickData.ask_volume_5: DbTickData.ask_volume_5,
-                        DbTickData.localtime: DbTickData.localtime,
+                        DbTickData.name: EXCLUDED.name,
+                        DbTickData.volume: EXCLUDED.volume,
+                        DbTickData.turnover: EXCLUDED.turnover,
+                        DbTickData.open_interest: EXCLUDED.open_interest,
+                        DbTickData.last_price: EXCLUDED.last_price,
+                        DbTickData.last_volume: EXCLUDED.last_volume,
+                        DbTickData.limit_up: EXCLUDED.limit_up,
+                        DbTickData.limit_down: EXCLUDED.limit_down,
+                        DbTickData.open_price: EXCLUDED.open_price,
+                        DbTickData.high_price: EXCLUDED.high_price,
+                        DbTickData.low_price: EXCLUDED.low_price,
+                        DbTickData.pre_close: EXCLUDED.pre_close,
+                        DbTickData.bid_price_1: EXCLUDED.bid_price_1,
+                        DbTickData.bid_price_2: EXCLUDED.bid_price_2,
+                        DbTickData.bid_price_3: EXCLUDED.bid_price_3,
+                        DbTickData.bid_price_4: EXCLUDED.bid_price_4,
+                        DbTickData.bid_price_5: EXCLUDED.bid_price_5,
+                        DbTickData.ask_price_1: EXCLUDED.ask_price_1,
+                        DbTickData.ask_price_2: EXCLUDED.ask_price_2,
+                        DbTickData.ask_price_3: EXCLUDED.ask_price_3,
+                        DbTickData.ask_price_4: EXCLUDED.ask_price_4,
+                        DbTickData.ask_price_5: EXCLUDED.ask_price_5,
+                        DbTickData.bid_volume_1: EXCLUDED.bid_volume_1,
+                        DbTickData.bid_volume_2: EXCLUDED.bid_volume_2,
+                        DbTickData.bid_volume_3: EXCLUDED.bid_volume_3,
+                        DbTickData.bid_volume_4: EXCLUDED.bid_volume_4,
+                        DbTickData.bid_volume_5: EXCLUDED.bid_volume_5,
+                        DbTickData.ask_volume_1: EXCLUDED.ask_volume_1,
+                        DbTickData.ask_volume_2: EXCLUDED.ask_volume_2,
+                        DbTickData.ask_volume_3: EXCLUDED.ask_volume_3,
+                        DbTickData.ask_volume_4: EXCLUDED.ask_volume_4,
+                        DbTickData.ask_volume_5: EXCLUDED.ask_volume_5,
+                        DbTickData.localtime: EXCLUDED.localtime,
                     },
                     conflict_target=(
                         DbTickData.symbol,
