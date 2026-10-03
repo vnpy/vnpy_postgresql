@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""PostgreSQL数据库接口。"""
 
 from .postgresql_database import PostgresqlDatabase as Database
 
