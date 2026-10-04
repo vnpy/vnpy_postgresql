@@ -1,6 +1,7 @@
 """PostgreSQL的K线与Tick存储实现。"""
 
 from datetime import datetime
+from typing import cast
 
 from peewee import (
     AutoField,
@@ -14,10 +15,10 @@ from peewee import (
     ModelDelete,
     fn,
     chunked,
-    Asc,
-    Desc,
     EXCLUDED
 )
+# peewee stubs 未声明 Asc、Desc，运行时模块有这两个排序函数
+from peewee import Asc, Desc  # type: ignore[attr-defined]
 
 from vnpy.trader.constant import Exchange, Interval
 from vnpy.trader.object import BarData, TickData
@@ -125,12 +126,13 @@ class DbBarOverview(Model):
 
     id: AutoField = AutoField()
 
-    symbol: CharField = CharField()
-    exchange: CharField = CharField()
-    interval: CharField = CharField()
-    count: IntegerField = IntegerField()
-    start: DateTimeField = DateTimeField()
-    end: DateTimeField = DateTimeField()
+    # 实例上读写到的是 Python 值；cast 不改变运行时的字段对象
+    symbol: str = cast(str, CharField())
+    exchange: str = cast(str, CharField())
+    interval: str = cast(str, CharField())
+    count: int = cast(int, IntegerField())
+    start: datetime = cast(datetime, DateTimeField())
+    end: datetime = cast(datetime, DateTimeField())
 
     class Meta:
         """绑定数据库，并以合约、交易所和周期建立唯一索引。"""
@@ -143,11 +145,12 @@ class DbTickOverview(Model):
 
     id: AutoField = AutoField()
 
-    symbol: CharField = CharField()
-    exchange: CharField = CharField()
-    count: IntegerField = IntegerField()
-    start: DateTimeField = DateTimeField()
-    end: DateTimeField = DateTimeField()
+    # 实例上读写到的是 Python 值；cast 不改变运行时的字段对象
+    symbol: str = cast(str, CharField())
+    exchange: str = cast(str, CharField())
+    count: int = cast(int, IntegerField())
+    start: datetime = cast(datetime, DateTimeField())
+    end: datetime = cast(datetime, DateTimeField())
 
     class Meta:
         """绑定数据库，并以合约和交易所建立唯一索引。"""
@@ -170,7 +173,7 @@ class PostgresqlDatabase(BaseDatabase):
         bar: BarData = bars[0]
         symbol: str = bar.symbol
         exchange: Exchange = bar.exchange
-        interval: Interval = bar.interval
+        interval: Interval = cast(Interval, bar.interval)
 
         # 将BarData数据转换为字典，并调整时区
         data: list = []
@@ -538,7 +541,7 @@ class PostgresqlDatabase(BaseDatabase):
                 .order_by(Asc(DbBarData.datetime))
                 .first()
             )
-            overview.start = start_bar.datetime
+            overview.start = cast(datetime, start_bar.datetime)
 
             end_bar: DbBarData = (
                 DbBarData.select()
@@ -550,6 +553,6 @@ class PostgresqlDatabase(BaseDatabase):
                 .order_by(Desc(DbBarData.datetime))
                 .first()
             )
-            overview.end = end_bar.datetime
+            overview.end = cast(datetime, end_bar.datetime)
 
             overview.save()
