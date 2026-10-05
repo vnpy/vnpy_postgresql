@@ -28,4 +28,4 @@ from .postgresql_database import PostgresqlDatabase as Database
 __all__ = ["Database"]
 
 
-__version__ = "1.1.2"
+__version__ = "1.1.3"
